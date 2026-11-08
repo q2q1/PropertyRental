@@ -1,0 +1,28 @@
+@model EventReportCreateModel
+@{
+    ViewData["Title"] = "Report to property owner";
+}
+<h1 class="h4 mb-3">Report an event to the property owner</h1>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-2">
+        <label class="form-label">Recipient (owner or administrator)</label>
+        <select asp-for="PropertyOwnerId" class="form-select" asp-items="ViewBag.OwnerOptions"></select>
+        <span asp-validation-for="PropertyOwnerId" class="text-danger"></span>
+    </div>
+    <div class="mb-2">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Send report</button>
+    <a asp-action="ManagerIndex" class="btn btn-link">Cancel</a>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

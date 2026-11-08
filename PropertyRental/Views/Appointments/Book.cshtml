@@ -1,0 +1,30 @@
+@model Appointment
+@{
+    ViewData["Title"] = "Book visit";
+    var apt = ViewBag.Apartment as Apartment;
+}
+<h1 class="h4 mb-3">Request a visit</h1>
+@if (apt != null)
+{
+    <p class="text-secondary">@apt.Building?.Name, unit @apt.UnitNumber — @apt.MonthlyRent.ToString("C") / month</p>
+}
+<form asp-action="Book" method="post">
+    <input type="hidden" asp-for="ApartmentId" />
+    <input type="hidden" asp-for="TenantId" />
+    <input type="hidden" asp-for="PropertyManagerId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="StartUtc" class="form-label">Preferred time (UTC)</label>
+        <input asp-for="StartUtc" class="form-control" />
+        <span asp-validation-for="StartUtc" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Optional message"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit request</button>
+    <a asp-controller="Browse" asp-action="Details" asp-route-id="@Model.ApartmentId" class="btn btn-link">Cancel</a>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

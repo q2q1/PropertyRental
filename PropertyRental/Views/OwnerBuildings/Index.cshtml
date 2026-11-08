@@ -1,0 +1,34 @@
+@model IReadOnlyList<Building>
+@{
+    ViewData["Title"] = "My buildings";
+}
+<h1 class="h3 mb-3">My buildings</h1>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto"><input name="search" value="@ViewBag.Search" class="form-control" placeholder="Search" /></div>
+    <div class="col-auto"><button type="submit" class="btn btn-outline-primary">Search</button></div>
+</form>
+@if (Model.Count == 0)
+{
+    <p class="text-secondary">No buildings are assigned to your account.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead><tr><th>Name</th><th>Address</th><th>City</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.Name</td>
+                <td>@b.StreetAddress</td>
+                <td>@b.City</td>
+                <td class="text-end">
+                    <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                    <a asp-action="Edit" asp-route-id="@b.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a asp-controller="OwnerApartments" asp-action="Index" asp-route-buildingId="@b.Id" class="btn btn-sm btn-outline-primary">Apartments</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,48 @@
+@model Apartment
+@{
+    ViewData["Title"] = "Edit apartment";
+}
+<h1 class="h4 mb-3">Edit apartment</h1>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-2">
+        <label asp-for="BuildingId" class="form-label">Building</label>
+        <select asp-for="BuildingId" class="form-select" asp-items="ViewBag.BuildingOptions"></select>
+    </div>
+    <div class="mb-2">
+        <label asp-for="UnitNumber" class="form-label"></label>
+        <input asp-for="UnitNumber" class="form-control" />
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-2">
+            <label asp-for="Bedrooms" class="form-label"></label>
+            <input asp-for="Bedrooms" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-2">
+            <label asp-for="Bathrooms" class="form-label"></label>
+            <input asp-for="Bathrooms" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-2">
+            <label asp-for="MonthlyRent" class="form-label"></label>
+            <input asp-for="MonthlyRent" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-2">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<ApartmentStatus>()"></select>
+    </div>
+    <div class="mb-2">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-link">Back</a>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,29 @@
+@model IReadOnlyList<OwnerEventReport>
+@{
+    ViewData["Title"] = "Reports from managers";
+}
+<h1 class="h3 mb-3">Reports from property managers</h1>
+<div class="list-group">
+@foreach (var r in Model)
+{
+    <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <strong>@r.Title</strong>
+            <small>@r.CreatedUtc.ToString("g") UTC</small>
+        </div>
+        <div class="small text-muted">From: @r.PropertyManager?.Email</div>
+        <p class="mb-2 mt-2">@r.Description</p>
+        @if (!r.IsAcknowledged)
+        {
+            <form asp-action="Acknowledge" method="post" class="d-inline">
+                <input type="hidden" name="id" value="@r.Id" />
+                <button type="submit" class="btn btn-sm btn-outline-primary">Acknowledge</button>
+            </form>
+        }
+        else
+        {
+            <span class="badge bg-secondary">Acknowledged</span>
+        }
+    </div>
+}
+</div>

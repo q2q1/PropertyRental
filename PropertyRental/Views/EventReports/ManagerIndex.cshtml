@@ -1,0 +1,20 @@
+@model IReadOnlyList<OwnerEventReport>
+@{
+    ViewData["Title"] = "Reports to owner";
+}
+<h1 class="h3 mb-3">Your reports to owners</h1>
+<p><a asp-action="Create" class="btn btn-primary btn-sm">New report</a></p>
+<table class="table table-striped">
+    <thead><tr><th>Date (UTC)</th><th>Owner</th><th>Title</th><th>Acknowledged</th></tr></thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.CreatedUtc.ToString("g")</td>
+            <td>@r.PropertyOwner?.Email</td>
+            <td>@r.Title</td>
+            <td>@(r.IsAcknowledged ? "Yes" : "No")</td>
+        </tr>
+    }
+    </tbody>
+</table>

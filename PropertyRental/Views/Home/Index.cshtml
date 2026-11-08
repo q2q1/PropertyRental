@@ -1,0 +1,85 @@
+@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="px-2 py-4 px-md-5 mb-4 bg-light rounded-3 border">
+    <div class="container-fluid py-3">
+        <h1 class="display-6 fw-bold">Property Rental Management</h1>
+        <p class="col-lg-8 fs-6 text-secondary">
+            Search available apartments, book visits with a property manager, and exchange messages.
+            Owners and administrators manage accounts; property managers maintain buildings and appointments.
+        </p>
+        <a class="btn btn-primary btn-lg" asp-controller="Browse" asp-action="Index">Browse apartments</a>
+        @if (User.Identity?.IsAuthenticated != true)
+        {
+            <a class="btn btn-outline-secondary btn-lg" asp-controller="TenantRegister" asp-action="Index">Create tenant account</a>
+        }
+    </div>
+</div>
+
+@if (Model.FeaturedApartments.Count > 0)
+{
+    <h2 class="h4 mt-2 mb-3">Featured listings</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mb-2">
+        @foreach (var a in Model.FeaturedApartments)
+        {
+            <div class="col">
+                <div class="card h-100 apartment-card shadow-sm">
+                    <img src="@(string.IsNullOrEmpty(a.ImageUrl) ? "/images/apt-placeholder.svg" : a.ImageUrl)" alt="" />
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h6 card-title">@a.Building?.City — @a.Building?.Name</h3>
+                        <p class="card-text small text-secondary mb-1">Unit @a.UnitNumber · @a.Bedrooms bed · @a.Bathrooms bath</p>
+                        <p class="fw-semibold mt-auto">@a.MonthlyRent.ToString("C") / mo · @a.Status</p>
+                        <a asp-controller="Browse" asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary mt-2">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <p class="mb-4"><a asp-controller="Browse" asp-action="Index" class="btn btn-outline-primary">Browse all apartments</a></p>
+}
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Tenants</h2>
+                <p class="card-text small">Register, search units, request appointments, and message your manager.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Property managers</h2>
+                <p class="card-text small">CRUD buildings and apartments, track status, schedule visits, reply to messages, report to owners.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 card-title">Owners</h2>
+                <p class="card-text small">Review your buildings and reports; property managers handle day-to-day listings and tenants.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Administration section removed (navigation handles access by role). *@
+
+@if (User.IsInRole("PropertyManager"))
+{
+    <div class="mt-4">
+        <h2 class="h5">Manager workspace</h2>
+        <ul>
+            <li><a asp-controller="Buildings" asp-action="Index">Buildings</a></li>
+            <li><a asp-controller="Apartments" asp-action="Index">Apartments</a></li>
+            <li><a asp-controller="Appointments" asp-action="ManagerIndex">Appointments</a></li>
+            <li><a asp-controller="Messages" asp-action="Index">Messages</a></li>
+            <li><a asp-controller="EventReports" asp-action="ManagerIndex">Reports to owner</a></li>
+            <li><a asp-controller="AdminTenants" asp-action="Index">Tenants</a></li>
+        </ul>
+    </div>
+}

@@ -1,0 +1,31 @@
+@model Appointment
+@{
+    ViewData["Title"] = "Update appointment";
+}
+<h1 class="h4 mb-3">Update appointment</h1>
+<p>Tenant: @Model.Tenant?.Email — @Model.Apartment?.Building?.Name #@Model.Apartment?.UnitNumber</p>
+<form asp-action="ManagerEdit" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="mb-2">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+            @foreach (AppointmentStatus s in Enum.GetValues(typeof(AppointmentStatus)))
+            {
+                if (s == Model.Status)
+                {
+                    <option value="@s" selected="selected">@s</option>
+                }
+                else
+                {
+                    <option value="@s">@s</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <textarea name="notes" class="form-control" rows="3">@Model.Notes</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="ManagerIndex" class="btn btn-link">Back</a>
+</form>

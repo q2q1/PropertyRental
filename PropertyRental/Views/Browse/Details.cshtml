@@ -1,0 +1,29 @@
+@model Apartment
+@{
+    ViewData["Title"] = $"Unit {Model.UnitNumber}";
+}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <img class="img-fluid rounded" src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/apt-placeholder.svg" : Model.ImageUrl)" alt="" />
+    </div>
+    <div class="col-lg-6">
+        <h1 class="h3">@Model.Building?.Name — Unit @Model.UnitNumber</h1>
+        <p class="text-secondary">@Model.Building?.StreetAddress, @Model.Building?.City</p>
+        <p>@Model.Description</p>
+        <ul class="list-unstyled">
+            <li><strong>Bedrooms:</strong> @Model.Bedrooms</li>
+            <li><strong>Bathrooms:</strong> @Model.Bathrooms</li>
+            <li><strong>Monthly rent:</strong> @Model.MonthlyRent.ToString("C")</li>
+            <li><strong>Status:</strong> @Model.Status</li>
+        </ul>
+        @if (User.IsInRole("Tenant"))
+        {
+            <a asp-controller="Appointments" asp-action="Book" asp-route-apartmentId="@Model.Id" class="btn btn-primary">Request a visit</a>
+        }
+        else if (User.Identity?.IsAuthenticated != true)
+        {
+            <p class="small"><a asp-controller="TenantRegister" asp-action="Index">Create a tenant account</a> or <a asp-area="Identity" asp-page="/Account/Login">log in</a> to book a visit.</p>
+        }
+        <a asp-action="Index" class="btn btn-link">Back to search</a>
+    </div>
+</div>

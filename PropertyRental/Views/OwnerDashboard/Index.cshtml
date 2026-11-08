@@ -1,0 +1,101 @@
+@model IReadOnlyList<Appointment>
+@{
+    ViewData["Title"] = "Owner dashboard";
+    var buildings = ViewBag.Buildings as IReadOnlyList<Building> ?? Array.Empty<Building>();
+}
+
+<h1 class="h3 mb-3">Owner dashboard</h1>
+
+@if (User.IsInRole("PropertyOwner"))
+{
+    <p class="mb-4">
+        <a asp-controller="OwnerBuildings" asp-action="Index" class="btn btn-sm btn-outline-primary">Edit my buildings</a>
+        <a asp-controller="OwnerApartments" asp-action="Index" class="btn btn-sm btn-outline-primary">Edit my apartments</a>
+        <a asp-controller="PropertyManagers" asp-action="Index" class="btn btn-sm btn-outline-secondary">Property managers</a>
+    </p>
+}
+
+<h2 class="h5 mt-4 mb-2">My buildings</h2>
+@if (buildings.Count == 0)
+{
+    <p class="text-secondary">No buildings assigned to this owner.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-lg-2 g-3">
+        @foreach (var b in buildings)
+        {
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h3 class="h6 mb-1">@b.Name</h3>
+                                <div class="small text-secondary">@b.StreetAddress, @b.City @b.PostalCode</div>
+                                <div class="small">Manager: @b.PropertyManager?.Email</div>
+                            </div>
+                            <span class="badge bg-light text-dark border">@b.Apartments.Count apartments</span>
+                        </div>
+
+                        <div class="table-responsive mt-3">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Rent</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var a in b.Apartments.OrderBy(x => x.UnitNumber))
+                                    {
+                                        <tr>
+                                            <td>@a.UnitNumber</td>
+                                            <td>@a.Status</td>
+                                            <td class="text-end">@a.MonthlyRent.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<h2 class="h5 mt-4 mb-2">Recent appointments</h2>
+@if (Model.Count == 0)
+{
+    <p class="text-secondary">No appointments yet.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-sm align-middle">
+            <thead>
+                <tr>
+                    <th>When (UTC)</th>
+                    <th>Tenant</th>
+                    <th>Building</th>
+                    <th>Unit</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appt in Model)
+                {
+                    <tr>
+                        <td>@appt.StartUtc.ToString("g")</td>
+                        <td>@appt.Tenant?.Email</td>
+                        <td>@appt.Apartment?.Building?.Name</td>
+                        <td>@appt.Apartment?.UnitNumber</td>
+                        <td>@appt.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+

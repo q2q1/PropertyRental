@@ -1,0 +1,11 @@
+@model Building
+@{
+    ViewData["Title"] = "Delete building";
+}
+<h1 class="h4">Delete building</h1>
+<p>Delete <strong>@Model.Name</strong> and all its apartments?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

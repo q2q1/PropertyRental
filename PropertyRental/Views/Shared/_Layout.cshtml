@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Property Rental</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PropertyRental.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">Property Rental</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"
+                        aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navMain">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-wrap">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Browse" asp-action="Index">Search apartments</a></li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("Tenant"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Appointments" asp-action="TenantIndex">My appointments</a></li>
+                            }
+                            @if (User.IsInRole("PropertyOwner"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="OwnerBuildings" asp-action="Index">My buildings</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="OwnerApartments" asp-action="Index">My apartments</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="PropertyManagers" asp-action="Index">Property managers</a></li>
+                            }
+                            @if (User.IsInRole("PropertyManager"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Buildings" asp-action="Index">Buildings</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Apartments" asp-action="Index">Apartments</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Appointments" asp-action="ManagerIndex">Appointments</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="EventReports" asp-action="ManagerIndex">Reports to owner</a></li>
+                            }
+                            @if (User.IsInRole("PropertyManager") || User.IsInRole("Tenant") || User.IsInRole("PropertyOwner"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Messages" asp-action="Index">Messages</a></li>
+                            }
+                            @if (User.IsInRole("PropertyOwner"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="OwnerDashboard" asp-action="Index">Owner dashboard</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="EventReports" asp-action="OwnerIndex">Owner reports</a></li>
+                            }
+                            @if (User.IsInRole("PropertyManager"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="AdminTenants" asp-action="Index">Tenants</a></li>
+                            }
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container py-4 flex-grow-1">
+        @if (TempData["Status"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Status"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted bg-light py-3 mt-auto">
+        <div class="container small">
+            &copy; 2026 Property Rental — 420-DW4-AS demo
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

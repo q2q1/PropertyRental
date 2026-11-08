@@ -1,0 +1,21 @@
+@model IReadOnlyList<Appointment>
+@{
+    ViewData["Title"] = "Appointments";
+}
+<h1 class="h3 mb-3">Tenant appointments</h1>
+<table class="table table-striped table-sm">
+    <thead><tr><th>When (UTC)</th><th>Tenant</th><th>Unit</th><th>Building</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.StartUtc.ToString("g")</td>
+            <td>@a.Tenant?.Email</td>
+            <td>@a.Apartment?.UnitNumber</td>
+            <td>@a.Apartment?.Building?.Name</td>
+            <td>@a.Status</td>
+            <td><a asp-action="ManagerEdit" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary">Update</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

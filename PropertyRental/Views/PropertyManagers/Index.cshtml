@@ -1,0 +1,32 @@
+@model IReadOnlyList<ApplicationUser>
+@{
+    ViewData["Title"] = "Property managers";
+}
+<h1 class="h3 mb-3">Property managers</h1>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input name="search" value="@ViewBag.Search" class="form-control" placeholder="Search name or email" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+    </div>
+    <div class="col-auto">
+        <a asp-action="Create" class="btn btn-primary">Create</a>
+    </div>
+</form>
+<table class="table table-striped table-sm align-middle">
+    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.FirstName @u.LastName</td>
+            <td>@u.Email</td>
+            <td>@u.PhoneNumber</td>
+            <td class="text-end">
+                <a asp-controller="Messages" asp-action="Create" asp-route-receiverId="@u.Id" class="btn btn-sm btn-outline-primary">Contact</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

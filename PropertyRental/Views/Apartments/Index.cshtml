@@ -1,0 +1,31 @@
+@model IReadOnlyList<Apartment>
+@{
+    ViewData["Title"] = "Apartments";
+}
+<h1 class="h3 mb-3">Apartments</h1>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <label class="form-label">Building</label>
+        <select name="buildingId" class="form-select" asp-items="ViewBag.BuildingFilter" onchange="this.form.submit()"></select>
+    </div>
+</form>
+<p><a asp-action="Create" class="btn btn-primary btn-sm">Add apartment</a></p>
+<table class="table table-striped table-sm">
+    <thead><tr><th>Building</th><th>Unit</th><th>Beds</th><th>Rent</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.Building?.Name</td>
+            <td>@a.UnitNumber</td>
+            <td>@a.Bedrooms</td>
+            <td>@a.MonthlyRent.ToString("C")</td>
+            <td>@a.Status</td>
+            <td class="text-end">
+                <a asp-action="Edit" asp-route-id="@a.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@a.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

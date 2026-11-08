@@ -1,0 +1,45 @@
+@model ApartmentSearchViewModel
+@{
+    ViewData["Title"] = "Search apartments";
+}
+<h1 class="h3 mb-3">Search apartments</h1>
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-3">
+        <label class="form-label" asp-for="City"></label>
+        <input asp-for="City" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" asp-for="MinBedrooms"></label>
+        <input asp-for="MinBedrooms" class="form-control" min="0" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" asp-for="MaxRent"></label>
+        <input asp-for="MaxRent" class="form-control" step="0.01" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label" asp-for="Status"></label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<ApartmentStatus>()">
+            <option value="">Any listed (available / reserved)</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+@foreach (var a in Model.Results)
+{
+    <div class="col">
+        <div class="card h-100 apartment-card shadow-sm">
+            <img src="@(string.IsNullOrEmpty(a.ImageUrl) ? "/images/apt-placeholder.svg" : a.ImageUrl)" alt="" />
+            <div class="card-body d-flex flex-column">
+                <h2 class="h6 card-title">@a.Building?.City — @a.Building?.Name</h2>
+                <p class="card-text small text-secondary mb-1">Unit @a.UnitNumber · @a.Bedrooms bed · @a.Bathrooms bath</p>
+                <p class="fw-semibold mt-auto">@a.MonthlyRent.ToString("C") / mo · @a.Status</p>
+                <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-outline-primary mt-2">Details</a>
+            </div>
+        </div>
+    </div>
+}
+</div>
